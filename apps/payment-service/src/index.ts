@@ -7,22 +7,9 @@ app.get('/', (c) => {
   return c.text('Hello Hono!')
 })
 
-const start= async()=>{
-  try {
-    serve({
-
-      fetch:app.fetch,
-      port:3004
-    }
-    ,(info)=>{
-      console.log(`Payment service is running on port ${info.port}`);
-    }
-  )
-  } catch (error) {
-    console.log(error)
-    process.exit(1)
-    
-  }
-}
-
-start()
+serve({
+  fetch: app.fetch,
+  port: 3000
+}, (info) => {
+  console.log(`Server is running on http://localhost:${info.port}`)
+})
