@@ -10,8 +10,9 @@ const PaymentForm = () => {
     register,
     handleSubmit,
     formState: { errors },
+    
   } = useForm<PaymentFormInputs>({
-    resolver: zodResolver(paymentFormSchema),
+    resolver: zodResolver(paymentFormSchema as any),
   });
 
   const router = useRouter();

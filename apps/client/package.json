@@ -3,26 +3,28 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack --port 3000",
+    "dev": "next dev  --port 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+   "lint": "next lint --max-warnings 0",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.2.1",
+    "@hookform/resolvers": "^5.2.2",
     "lucide-react": "^0.535.0",
     "next": "15.4.5",
+    "npm": "^11.6.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hook-form": "^7.61.1",
     "react-toastify": "^11.0.5",
-    "zod": "^4.0.14",
+    "zod": "^4.1.11",
     "zustand": "^5.0.7"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "@hookform/resolvers/zod",
-    "@repo/typescript-config": "workspace:*",
     "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@tailwindcss/postcss": "@hookform/resolvers/zod",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

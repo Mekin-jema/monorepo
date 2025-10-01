@@ -51,10 +51,13 @@ export const columns: ColumnDef<Product>[] = [
     header: "Image",
     cell: ({ row }) => {
       const product = row.original;
+      const colorKey = product.colors?.[0];
+      const imageSrc =
+        (colorKey ? product.images[colorKey] : undefined) ?? "/placeholder.png";
       return (
         <div className="w-9 h-9 relative">
           <Image
-            src={product.images[product.colors[0]]}
+            src={imageSrc}
             alt={product.name}
             fill
             className="rounded-full object-cover"
