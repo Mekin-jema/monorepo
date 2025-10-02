@@ -1,4 +1,4 @@
-import express from "express"
+import express, { Request, Response } from "express"
 import cors from "cors"
 const app = express()
 
@@ -11,8 +11,10 @@ app.use(cors({
     credentials:true
 }))
 
-
+app.get("/",(req:Request,res:Response)=>{
+    res.json({message:"Hello from product service"})
+})
 
 app.listen(3002,()=>{
-    console.log("Product service is running on port 3000");
+    console.log("Product service is running on port 3002");
 })

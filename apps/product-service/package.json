@@ -6,7 +6,7 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "pnpm dlx tsx --watch src/index.ts --port 3003",
+    "dev": "pnpm dlx tsx --watch src/index.ts --port 3002",
     "check-types": "tsc --noEmit"
   },
   "keywords": [
@@ -23,6 +23,7 @@
     "@repo/typescript-config": "workspace:*",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "cors": "^2.8.5",
     "express": "^5.1.0"
   }
 }
