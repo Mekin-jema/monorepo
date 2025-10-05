@@ -1,6 +1,7 @@
-// middlewares/auth.ts
 import { Request, Response, NextFunction } from "express";
-import { auth } from "@repo/auth"; // import from your setup
+import { auth } from "@repo/auth"; // your Better Auth setup
+import {postgresPrisma} from "@repo/db"
+import { fromNodeHeaders } from "better-auth/node";
 
 declare global {
   namespace Express {
@@ -11,10 +12,11 @@ declare global {
   }
 }
 
+// Middleware to check if user is authenticated
 export const isAuthenticated = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const session = await auth.api.verifySession({
-      headers: req.headers, // pass request headers (Authorization, cookies, etc.)
+    const session = await auth.api.getSession({
+      headers: fromNodeHeaders(req.headers),
     });
 
     if (!session) {
@@ -22,19 +24,29 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
     }
 
     req.userId = session.user.id;
-    req.role = session.user.role; // assuming you set roles in Better Auth
+    req.role = session.user.role; // Ensure you store roles in Better Auth
 
     next();
   } catch (err) {
+    console.error("Authentication error:", err);
     return res.status(401).json({ message: "Invalid session!" });
   }
 };
 
+// Middleware to authorize based on roles
 export const authorize =
   (...roles: string[]) =>
   (req: Request, res: Response, next: NextFunction) => {
-    if (!req.role || !roles.includes(req.role)) {
-      return res.status(403).json({ message: "Forbidden" });
+    if (!req.role) {
+      return res.status(403).json({ message: "Role not found, access denied" });
     }
+
+    if (!roles.includes(req.role)) {
+      return res.status(403).json({ message: "Forbidden: insufficient permissions" });
+    }
+
     next();
   };
+
+// Shortcut middleware for admin-only routes
+export const isAdmin = authorize("admin");

@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./auth-db": {
+     ".": "./src/index.ts",
+    "./mongo": {
       "types": "./dist/auth-db.d.ts",
       "default": "./dist/auth-db.js"
     },
@@ -17,21 +18,19 @@
       "default": "./dist/sqlite-db.js"
     }
   },
+
+
 "scripts": {
 
-  "dev": "pnpm docker:up && next dev --turbopack",
-  "build": "next build",
-  "start": "next start",
   "lint": "next lint",
-  "docker:up": "docker-compose up -d",
-
+  "check-types": "tsc --noEmit",
 
 
   "postinstall": "pnpm generate",
 
-  "generate:auth": "npx prisma generate --schema ./prisma/auth/authdb.prisma --no-engine",
-  "generate:postgres": "npx prisma generate --schema ./prisma/mongo/mongo.prisma --no-engine",
-  "generate:sqlite": "npx prisma generate --schema ./prisma/sqlite/sqlite.prisma --no-engine",
+  "generate:auth": "npx prisma generate --schema ./prisma/auth/authdb.prisma ",
+  "generate:postgres": "npx prisma generate --schema ./prisma/mongo/mongo.prisma",
+  "generate:sqlite": "npx prisma generate --schema ./prisma/sqlite/sqlite.prisma ",
   "generate": "pnpm generate:auth && pnpm generate:postgres && pnpm generate:sqlite",
 
   "migrate:auth": "npx prisma migrate dev --schema ./prisma/auth/authdb.prisma",
@@ -39,18 +38,24 @@
   "migrate": "pnpm migrate:auth  && pnpm migrate:sqlite",
 
   "deploy:auth": "npx prisma migrate deploy --schema ./prisma/auth/authdb.prisma",
-  "deploy:postgres": "npx prisma migrate deploy --schema ./prisma/postgres/postgres.prisma",
+  "deploy:postgres": "npx prisma migrate deploy --schema ./prisma/mongo/mongo.prisma",
   "deploy:sqlite": "npx prisma migrate deploy --schema ./prisma/sqlite/sqlite.prisma",
   "deploy": "pnpm deploy:auth && pnpm deploy:postgres && pnpm deploy:sqlite",
 
-  "studio:auth": "npx prisma studio --schema ./prisma/auth/authdb.prisma --port 5555",
-  "studio:postgres": "npx prisma studio --schema ./prisma/postgres/postgres.prisma --port 5556",
+  "studio:auth": "npx prisma studio --schema ./prisma/auth/authdb.prisma --port 5554",
+  "studio:postgres": "npx prisma studio --schema ./prisma/mongo/mongo.prisma --port 5556",
   "studio:sqlite": "npx prisma studio --schema ./prisma/sqlite/sqlite.prisma --port 5557",
   "studio": "pnpm studio:auth & pnpm studio:postgres & pnpm studio:sqlite"
+,
+  "seeds:sqlite": "pnpm dlx tsx ./prisma/seeds/sqliteSeed.ts",
+  "seeds:mongo": "pnpm dlx tsx ./prisma/seeds/mongoSeed.ts",
+  "seeds:postgres": "pnpm dlx tsx ./prisma/seeds/postgresSeed.ts",
+  "seeds:all": "node ./prisma/seeds/runAllSeeds.mjs"
 },
 
   "dependencies": {
-    "@prisma/client": "latest"
+    "@prisma/client": "latest",
+    "@repo/typescript-config": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^24.6.2",

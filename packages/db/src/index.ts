@@ -11,4 +11,7 @@ export * as PostgresDB from "../generated/postgres";
 export * as MongoDB from "../generated/mongo";
 export * as SQLiteDB from "../generated/sqlite";
 
+//  Export the clients for easy access
+
+
 export {mongoPrisma,sqlitePrisma,postgresPrisma }

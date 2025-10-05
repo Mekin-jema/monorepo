@@ -4,5 +4,5 @@ import { createAuthClient as createBetterAuthClient } from "better-auth/react"
 //     baseURL: "http://localhost:3000"
 // })
 
-export const createAuthClient=()=>createBetterAuthClient()
-export type signIn=ReturnType<typeof createAuthClient>["signIn"]
+export const authClient=()=>createBetterAuthClient()
+export type signIn=ReturnType<typeof authClient>["signIn"]

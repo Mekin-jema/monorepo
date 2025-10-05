@@ -1,12 +1,10 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 // If your Prisma file is located elsewhere, you can change the path
-import { PrismaClient } from "@/generated/prisma";
-
-const prisma = new PrismaClient();
+import { postgresPrisma } from "@repo/db";
 export const auth = betterAuth({
-    database: prismaAdapter(prisma, {
-        provider: "sqlite", // or "mysql", "postgresql", ...etc
+    database: prismaAdapter(postgresPrisma, {
+        provider: "postgresql", // or "mysql", "sqlite", ...etc
     }),
       pages:{
     signIn: "/signin",
@@ -36,5 +34,5 @@ export const auth = betterAuth({
 
 }); 
 
-export type Auth=ReturnType<typeof auth>
-export type session=Auth["$Infer"]["session"]
+// export type Auth=ReturnType<typeof auth>
+// export type session=Auth["$Infer"]["session"]
