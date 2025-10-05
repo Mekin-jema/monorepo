@@ -1,0 +1,60 @@
+{
+  "name": "@repo/db",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./auth-db": {
+      "types": "./dist/auth-db.d.ts",
+      "default": "./dist/auth-db.js"
+    },
+    "./postgres-db": {
+      "types": "./dist/postgres-db.d.ts",
+      "default": "./dist/postgres-db.js"
+    },
+    "./sqlite-db": {
+      "types": "./dist/sqlite-db.d.ts",
+      "default": "./dist/sqlite-db.js"
+    }
+  },
+"scripts": {
+
+  "dev": "pnpm docker:up && next dev --turbopack",
+  "build": "next build",
+  "start": "next start",
+  "lint": "next lint",
+  "docker:up": "docker-compose up -d",
+
+
+
+  "postinstall": "pnpm generate",
+
+  "generate:auth": "npx prisma generate --schema ./prisma/auth/authdb.prisma --no-engine",
+  "generate:postgres": "npx prisma generate --schema ./prisma/mongo/mongo.prisma --no-engine",
+  "generate:sqlite": "npx prisma generate --schema ./prisma/sqlite/sqlite.prisma --no-engine",
+  "generate": "pnpm generate:auth && pnpm generate:postgres && pnpm generate:sqlite",
+
+  "migrate:auth": "npx prisma migrate dev --schema ./prisma/auth/authdb.prisma",
+  "migrate:sqlite": "npx prisma migrate dev --schema ./prisma/sqlite/sqlite.prisma",
+  "migrate": "pnpm migrate:auth  && pnpm migrate:sqlite",
+
+  "deploy:auth": "npx prisma migrate deploy --schema ./prisma/auth/authdb.prisma",
+  "deploy:postgres": "npx prisma migrate deploy --schema ./prisma/postgres/postgres.prisma",
+  "deploy:sqlite": "npx prisma migrate deploy --schema ./prisma/sqlite/sqlite.prisma",
+  "deploy": "pnpm deploy:auth && pnpm deploy:postgres && pnpm deploy:sqlite",
+
+  "studio:auth": "npx prisma studio --schema ./prisma/auth/authdb.prisma --port 5555",
+  "studio:postgres": "npx prisma studio --schema ./prisma/postgres/postgres.prisma --port 5556",
+  "studio:sqlite": "npx prisma studio --schema ./prisma/sqlite/sqlite.prisma --port 5557",
+  "studio": "pnpm studio:auth & pnpm studio:postgres & pnpm studio:sqlite"
+},
+
+  "dependencies": {
+    "@prisma/client": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "^24.6.2",
+    "prisma": "latest",
+    "typescript": "latest"
+  }
+}
