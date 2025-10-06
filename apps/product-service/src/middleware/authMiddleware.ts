@@ -24,7 +24,7 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
     }
 
     req.userId = session.user.id;
-    req.role = session.user.role; // Ensure you store roles in Better Auth
+    // req.role = session.user.role; // Ensure you store roles in Better Auth
 
     next();
   } catch (err) {

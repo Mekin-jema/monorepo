@@ -5,7 +5,7 @@ generator Client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL_SQLITE") // e.g., "file:./dev.db"
+  url      =  "file:./dev.db"
 }
 
 model Cache {

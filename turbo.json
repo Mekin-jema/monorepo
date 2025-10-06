@@ -26,6 +26,21 @@
     },
     "db:deploy": {
       "cache": false
+    },
+    "generate": {
+      "cache": false
+    },
+    "migrate": {
+      "cache": false
+    },
+    "studio": {
+      "cache": false,
+      "persistent": true
+    },
+    "seedsall": {
+      "cache": false,
+      "persistent": true
     }
-  }
+}
+
 }

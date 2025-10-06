@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   // Clear existing logs (optional)
-  await prisma.activityLog.deleteMany({});
+  // await prisma.activityLog.deleteMany({});
 
   const now = new Date();
 

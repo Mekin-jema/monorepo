@@ -17,7 +17,8 @@ app.use(
 );
 
 // Mount Better Auth handler before express.json()
-app.all("/api/auth/*", toNodeHandler(auth));
+app.all("/api/auth", toNodeHandler(auth));
+
 
 // Only use express.json() for other routes
 app.use(express.json());
