@@ -36,11 +36,11 @@
     "deploy:order": "npx prisma migrate deploy --schema ./prisma/order/order.prisma",
     "deploy": "pnpm deploy:auth && pnpm deploy:product && pnpm deploy:order",
     
-    "studio:auth": "npx prisma studio --schema ./prisma/auth/auth.prisma --port 5554",
-    "studio:product": "npx prisma studio --schema ./prisma/product/product.prisma --port 5556",
-    "studio:order": "npx prisma studio --schema ./prisma/order/order.prisma --port 5557",
-    "studio": "pnpm studio:auth & pnpm studio:product & pnpm studio:order",
-    
+    "studio:auth": "npx prisma studio --schema ./prisma/auth/auth.prisma --port 5554 &",
+  "studio:product": "npx prisma studio --schema ./prisma/product/product.prisma --port 5556 &",
+  "studio:order": "npx prisma studio --schema ./prisma/order/order.prisma --port 5557 &",
+  "studio": "pnpm run studio:auth && pnpm run studio:product && pnpm run studio:order"
+,
     "seeds:order": "pnpm dlx tsx  ./prisma/seeds/orderSeed.ts",
     "seeds:product": "pnpm dlx tsx  ./prisma/seeds/productSeed.ts",
     "seeds:auth": "pnpm dlx tsx  ./prisma/seeds/authSeed.ts",

@@ -1,135 +1,207 @@
-# Turborepo starter
+<div align="center">
 
-This Turborepo starter is maintained by the Turborepo core team.
+# E‑commerce Monorepo
 
-## Using this example
+Next.js apps + Node microservices + Prisma + Kafka — all in one Turborepo.
 
-Run the following command:
+</div>
 
-```sh
-npx create-turbo@latest
-```
+## Overview
 
-## What's inside?
+This monorepo hosts a small e‑commerce platform composed of two Next.js apps (Admin and Client) and three backend services (Product, Order, Payment). Shared packages provide database access, authentication helpers, Kafka client utilities, and common configs. Development is orchestrated with pnpm and Turborepo, and local infra (Postgres, MongoDB, Kafka) is provided via Docker Compose.
 
-This Turborepo includes the following packages/apps:
+Highlights
+- Monorepo tooling: Turborepo + pnpm workspaces
+- Frontend: Next.js 15, React 19, Tailwind CSS 4
+- Backend: Express (Product), Fastify (Order), Hono (Payment)
+- Data: Prisma clients for Auth/Postgres, Product, Order; MongoDB replicaset; SQLite (optional)
+- Messaging: Kafka cluster (3 brokers) + Kafka UI
 
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
+## Repository layout
 
 ```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+apps/
+	admin/            # Next.js Admin app (port 3000)
+	client/           # Next.js Client app (port 3001)
+	product-service/  # Express service (port 3002)
+	order-service/    # Fastify service (port 3003)
+	payment-service/  # Hono service (port 3004)
+packages/
+	db/               # Prisma clients, schema, seeds (auth/product/order)
+	auth/             # Auth helpers (server & client)
+	kafka/            # KafkaJS wrapper utilities
+	ui/               # Shared UI components (if used)
+	types/            # Shared types
+	eslint-config/    # Shared ESLint configs
+	typescript-config/# Shared TSConfigs
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+See also: `docker-compose.yml`, `turbo.json`, `pnpm-workspace.yaml` in the repo root.
+
+## Tech stack
+
+- Next.js, React, Tailwind CSS
+- Node.js (Express, Fastify, Hono)
+- Prisma, PostgreSQL, MongoDB, SQLite
+- Kafka (KafkaJS), Kafka UI
+- Turborepo, pnpm, TypeScript
+
+## Architecture (high‑level)
 
 ```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+[Client (Next.js)] ─┐                 ┌─> [Kafka UI]
+										├─> [API services]┼─> [Kafka (3 brokers)]
+[Admin (Next.js)] ──┘                 │
+																			├─> [PostgreSQL]
+																			└─> [MongoDB RS]
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+API services:
+	- product-service (Express)
+	- order-service (Fastify)
+	- payment-service (Hono)
+
+Shared packages:
+	- @repo/db (Prisma for auth/product/order)
+	- @repo/auth, @repo/kafka, @repo/ui, @repo/types
 ```
 
-### Develop
+## Getting started
 
-To develop all apps and packages, run the following command:
+Prerequisites
+- Node.js >= 18
+- pnpm >= 9
+- Docker (optional but recommended for local DBs/Kafka)
 
-```
-cd my-turborepo
+Setup
+1) Install dependencies
+	 - pnpm install
+2) Configure environment
+	 - cp .env.example .env
+	 - Adjust values as needed (ports, secrets, OAuth keys)
+3) Start infra (databases, Kafka) in Docker
+	 - pnpm run docker:up:build
+	 - Kafka UI at http://localhost:8080; Postgres at localhost:5432; Mongo at localhost:27017
+4) Generate Prisma clients
+	 - pnpm -F @repo/db generate
+5) Migrate or deploy Prisma schemas
+	 - Dev migrations: pnpm -F @repo/db migrate
+	 - Deploy (CI/prod style): pnpm -F @repo/db deploy
+6) Seed sample data (optional)
+	 - pnpm -F @repo/db seedsall
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+Run everything (all apps/services)
+- pnpm dev  (runs "turbo run dev" across the workspace)
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
+Run a single target
+- Admin app: pnpm --filter ./apps/admin dev  (http://localhost:3000)
+- Client app: pnpm --filter ./apps/client dev (http://localhost:3001)
+- Product service: pnpm --filter ./apps/product-service dev (http://localhost:3002)
+- Order service: pnpm --filter ./apps/order-service dev   (http://localhost:3003)
+- Payment service: pnpm --filter ./apps/payment-service dev (http://localhost:3004)
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## Environment variables
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+Environment is shared via Turborepo (see `turbo.json > globalEnv`). Copy `.env.example` and tweak as needed.
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+Core DB URLs
+- DATABASE_URL_POSTGRES: Postgres (auth) — matches docker-compose
+- DATABASE_URL_MONGO: MongoDB replica set (authSource=admin, replicaSet=rs0)
+- DATABASE_URL_SQLITE: Optional SQLite file for local/testing
 
-### Remote Caching
+Frontend/base URLs
+- NEXT_PUBLIC_BASE_URL, NEXT_PUBLIC_API_URL, APP1_URL, APP2_URL
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+OAuth/Email/Storage
+- GITHUB_CLIENT_ID/SECRET, GOOGLE_CLIENT_ID/SECRET
+- EMAIL_USER/EMAIL_PASS
+- CLOUDINARY_URL, NEXT_PUBLIC_CLOUDINARY_UPLOAD_URL, NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+Analytics/Security/Payments
+- NEXT_PUBLIC_POSTHOG_KEY, ARCJET_KEY, CHAPA_SECRET_KEY
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+Auth
+- BETTER_AUTH_SECRET, BETTER_AUTH_URL
 
-```
-cd my-turborepo
+See `.env.example` for working local defaults.
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
+## Services
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
+- apps/admin (Next.js, port 3000)
+	- Admin dashboard UI
+	- README: `apps/admin/README.md`
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+- apps/client (Next.js, port 3001)
+	- Storefront UI
+	- README: `apps/client/README.md`
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+- apps/product-service (Express, port 3002)
+	- Product catalog (CRUD, categories, inventory sync, Kafka events)
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
+- apps/order-service (Fastify, port 3003)
+	- Order management (checkout, status, Kafka consumers)
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
+- apps/payment-service (Hono, port 3004)
+	- Payment endpoints/simulation
 
-## Useful Links
+## Packages
 
-Learn more about the power of Turborepo:
+- @repo/db
+	- Prisma clients for: auth (Postgres/Mongo), product, order
+	- Commands: `generate`, `migrate` (auth/order), `deploy` (auth/product/order), `studio:*`, `seeds:*`, `seedsall`
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+- @repo/auth
+	- Shared auth server/client helpers built on better-auth
+
+- @repo/kafka
+	- KafkaJS utilities for producing/consuming
+
+- @repo/ui, @repo/types, @repo/eslint-config, @repo/typescript-config
+	- Shared UI, types, lint, and TSConfigs across the monorepo
+
+## Local infrastructure (Docker)
+
+`docker-compose.yml` starts:
+- PostgreSQL 16 (user: postgres_user, pass: postgres_pass, db: authdb)
+- MongoDB 7 with replica set (user: mongo_user, pass: mongo_pass, db: mongotest)
+- Kafka cluster (3 brokers) + Kafka UI on :8080
+- Portainer (optional) on :9000
+
+Useful root scripts
+- pnpm run docker:up       # docker-compose up
+- pnpm run docker:up:build # docker-compose up -d --build
+
+## Prisma quick reference
+
+From repo root (workspace filter):
+- Generate: pnpm -F @repo/db generate
+- Dev migrate: pnpm -F @repo/db migrate
+- Deploy migrations: pnpm -F @repo/db deploy
+- Open Studio: pnpm -F @repo/db studio  (auth:5554, product:5556, order:5557)
+- Seed all: pnpm -F @repo/db seedsall
+
+Note: The `migrate` script currently applies for auth/order schemas. Product uses `deploy` (check `packages/db/package.json`).
+
+## Troubleshooting
+
+- Prisma generate/migrate fails
+	- Ensure `.env` exists and DB URLs are correct
+	- If using Docker, wait a few seconds after `docker:up:build` for DBs to be ready
+	- Mongo needs replica set initiated (handled by `mongo-init-replica` service)
+
+- Ports already in use
+	- Admin 3000, Client 3001, Product 3002, Order 3003, Payment 3004, Kafka UI 8080, Portainer 9000
+
+- Kafka not reachable from services
+	- Use internal broker names when running in Docker network; for local dev from host, use advertised listeners on 9094/9095/9096 (see compose)
+
+## Contributing
+
+- Use pnpm and Node >= 18
+- Keep packages typed: `pnpm run check-types`
+- Lint: `pnpm run lint`
+- Prefer shared configs from `packages/*`
+
+---
+
+Happy hacking! If you spot gaps or have ideas, open a PR or issue.
+
