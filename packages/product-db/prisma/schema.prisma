@@ -9,27 +9,7 @@ datasource db {
   url      = "file:../dev.db"
 }
 
-model Product {
-  id               Int      @id @default(autoincrement())
-  name             String
-  shortDescription String
-  description      String
-  price            Int
-  sizes            String
-  colors           Json
-  images           Json
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  categorySlug     String
-  category         Category @relation(fields: [categorySlug], references: [slug])
-}
 
-model Category {
-  id       Int       @id @default(autoincrement())
-  name     String
-  slug     String    @unique
-  products Product[]
-}
 
 model User {
   id            String    @id

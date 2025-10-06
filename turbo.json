@@ -1,11 +1,50 @@
 {
   "$schema": "https://turborepo.com/schema.json",
+  "globalEnv": [
+    "NODE_ENV",
+    "DATABASE_URL",
+    "DATABASE_URL_MONGO",
+    "DATABASE_URL_POSTGRES",
+    "DATABASE_URL_SQLITE",
+    "BETTER_AUTH_SECRET",
+    "BETTER_AUTH_URL",
+    "NEXT_PUBLIC_API_URL",
+    "GITHUB_CLIENT_ID",
+    "GITHUB_CLIENT_SECRET",
+    "APP1_URL",
+    "APP2_URL",
+    "NEXT_PUBLIC_CLOUDINARY_UPLOAD_URL",
+    "NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET",
+    "CLOUDINARY_URL",
+    "EMAIL_USER",
+    "EMAIL_PASS",
+    "NEXT_PUBLIC_POSTHOG_KEY",
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET",
+    "ARCJET_KEY",
+    "VITE_MAP_API_KEY",
+    "NEXT_PUBLIC_API_KEY",
+    "NEXT_PUBLIC_BASE_URL",
+    "NEXT_PUBLIC_MAP_API_KEY",
+    "NEXT_PUBLIC_MAP_API_BASE_URL",
+    "CHAPA_SECRET_KEY"
+  ],
+  "globalDependencies": [".env*"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**"],
-         "env": ["DATABASE_URL"]
+      "env": [
+        "NODE_ENV",
+        "DATABASE_URL",
+        "DATABASE_URL_MONGO",
+        "DATABASE_URL_POSTGRES",
+        "DATABASE_URL_SQLITE",
+        "BETTER_AUTH_SECRET",
+        "BETTER_AUTH_URL",
+        "NEXT_PUBLIC_API_URL"
+      ]
     },
     "lint": {
       "dependsOn": ["^lint"]
@@ -15,32 +54,99 @@
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": [
+        "NODE_ENV",
+        "DATABASE_URL",
+        "DATABASE_URL_MONGO",
+        "DATABASE_URL_POSTGRES",
+        "DATABASE_URL_SQLITE",
+        "BETTER_AUTH_SECRET",
+        "BETTER_AUTH_URL",
+        "NEXT_PUBLIC_API_URL",
+        "NEXT_PUBLIC_CLOUDINARY_UPLOAD_URL",
+        "NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET"
+      ]
     },
-      "db:generate": {
+
+    "db:generate:auth": {
+      "cache": false,
+      "env": ["DATABASE_URL", "DATABASE_URL_MONGO"]
+    },
+    "db:generate:postgres": {
+      "cache": false,
+      "env": ["DATABASE_URL_POSTGRES"]
+    },
+    "db:generate:sqlite": {
+      "cache": false,
+      "env": ["DATABASE_URL_SQLITE"]
+    },
+    "db:generate": {
+      "dependsOn": ["db:generate:auth","db:generate:postgres","db:generate:sqlite"],
       "cache": false
+    },
+    "db:migrate:auth": {
+      "cache": false,
+      "env": ["DATABASE_URL", "DATABASE_URL_MONGO"]
+    },
+    "db:migrate:sqlite": {
+      "cache": false,
+      "env": ["DATABASE_URL_SQLITE"]
     },
     "db:migrate": {
+      "dependsOn": ["db:migrate:auth","db:migrate:sqlite"],
       "cache": false,
       "persistent": true
+    },
+    "db:deploy:auth": {
+      "cache": false,
+      "env": ["DATABASE_URL", "DATABASE_URL_MONGO"]
+    },
+    "db:deploy:postgres": {
+      "cache": false,
+      "env": ["DATABASE_URL_POSTGRES"]
+    },
+    "db:deploy:sqlite": {
+      "cache": false,
+      "env": ["DATABASE_URL_SQLITE"]
     },
     "db:deploy": {
+      "dependsOn": ["db:deploy:auth","db:deploy:postgres","db:deploy:sqlite"],
       "cache": false
     },
-    "generate": {
-      "cache": false
+    "studio:auth": {
+      "cache": false,
+      "env": ["DATABASE_URL", "DATABASE_URL_MONGO"]
     },
-    "migrate": {
-      "cache": false
+    "studio:postgres": {
+      "cache": false,
+      "env": ["DATABASE_URL_POSTGRES"]
+    },
+    "studio:sqlite": {
+      "cache": false,
+      "env": ["DATABASE_URL_SQLITE"]
     },
     "studio": {
+      "dependsOn": ["studio:auth","studio:postgres","studio:sqlite"],
       "cache": false,
       "persistent": true
     },
+    "seeds:sqlite": {
+      "cache": false,
+      "env": ["DATABASE_URL_SQLITE"]
+    },
+    "seeds:mongo": {
+      "cache": false,
+      "env": ["DATABASE_URL_MONGO"]
+    },
+    "seeds:postgres": {
+      "cache": false,
+      "env": ["DATABASE_URL_POSTGRES"]
+    },
     "seedsall": {
+      "dependsOn": ["seeds:sqlite","seeds:mongo","seeds:postgres"],
       "cache": false,
       "persistent": true
     }
-}
-
+  }
 }

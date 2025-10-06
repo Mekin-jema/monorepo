@@ -5,41 +5,45 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./mongo": {
+    "./product": {
       "types": "./dist/auth-db.d.ts",
       "default": "./dist/auth-db.js"
     },
-    "./postgres-db": {
+    "./auth": {
       "types": "./dist/postgres-db.d.ts",
       "default": "./dist/postgres-db.js"
     },
-    "./sqlite-db": {
-      "types": "./dist/sqlite-db.d.ts",
-      "default": "./dist/sqlite-db.js"
+    "./order": {
+      "types": "./dist/order-db.d.ts",
+      "default": "./dist/order-db.js"
     }
   },
   "scripts": {
     "lint": "next lint",
     "check-types": "tsc --noEmit",
     "postinstall": "pnpm generate",
-    "generate:auth": "npx prisma generate --schema ./prisma/auth/authdb.prisma ",
-    "generate:postgres": "npx prisma generate --schema ./prisma/mongo/mongo.prisma",
-    "generate:sqlite": "npx prisma generate --schema ./prisma/sqlite/sqlite.prisma ",
-    "generate": "pnpm generate:auth && pnpm generate:postgres && pnpm generate:sqlite",
-    "migrate:auth": "npx prisma migrate dev --schema ./prisma/auth/schema.prisma  ",
-    "migrate:sqlite": "npx prisma migrate dev --schema ./prisma/sqlite/sqlite.prisma",
-    "migrate": "pnpm migrate:auth  && pnpm migrate:sqlite",
-    "deploy:auth": "npx prisma migrate deploy --schema ./prisma/auth/authdb.prisma",
-    "deploy:postgres": "npx prisma migrate deploy --schema ./prisma/mongo/mongo.prisma",
-    "deploy:sqlite": "npx prisma migrate deploy --schema ./prisma/sqlite/sqlite.prisma",
-    "deploy": "pnpm deploy:auth && pnpm deploy:postgres && pnpm deploy:sqlite",
-    "studio:auth": "npx prisma studio --schema ./prisma/auth/authdb.prisma --port 5554",
-    "studio:postgres": "npx prisma studio --schema ./prisma/mongo/mongo.prisma --port 5556",
-    "studio:sqlite": "npx prisma studio --schema ./prisma/sqlite/sqlite.prisma --port 5557",
-    "studio": "pnpm studio:auth & pnpm studio:postgres & pnpm studio:sqlite",
-    "seeds:sqlite": "pnpm dlx tsx  ./prisma/seeds/sqliteSeed.ts",
-    "seeds:mongo": "pnpm dlx tsx  ./prisma/seeds/mongoSeed.ts",
-    "seeds:postgres": "pnpm dlx tsx  ./prisma/seeds/postgresSeed.ts",
+    
+    "generate:auth": "npx prisma generate --schema ./prisma/auth/auth.prisma ",
+    "generate:product": "npx prisma generate --schema ./prisma/product/product.prisma",
+    "generate:order": "npx prisma generate --schema ./prisma/order/order.prisma ",
+    "generate": "pnpm generate:auth && pnpm generate:product && pnpm generate:order",
+    "migrate:auth": "npx prisma migrate dev --schema ./prisma/auth/auth.prisma  ",
+    "migrate:order": "npx prisma migrate dev --schema ./prisma/order/order.prisma",
+    "migrate": "pnpm migrate:auth  && pnpm migrate:order",
+   
+    "deploy:auth": "npx prisma migrate deploy --schema ./prisma/auth/auth.prisma",
+    "deploy:product": "npx prisma migrate deploy --schema ./prisma/product/product.prisma",
+    "deploy:order": "npx prisma migrate deploy --schema ./prisma/order/order.prisma",
+    "deploy": "pnpm deploy:auth && pnpm deploy:product && pnpm deploy:order",
+    
+    "studio:auth": "npx prisma studio --schema ./prisma/auth/auth.prisma --port 5554",
+    "studio:product": "npx prisma studio --schema ./prisma/product/product.prisma --port 5556",
+    "studio:order": "npx prisma studio --schema ./prisma/order/order.prisma --port 5557",
+    "studio": "pnpm studio:auth & pnpm studio:product & pnpm studio:order",
+    
+    "seeds:order": "pnpm dlx tsx  ./prisma/seeds/orderSeed.ts",
+    "seeds:product": "pnpm dlx tsx  ./prisma/seeds/productSeed.ts",
+    "seeds:auth": "pnpm dlx tsx  ./prisma/seeds/authSeed.ts",
     "seedsall": "node  prisma/seeds/runAllSeeds.mjs"
   },
   "dependencies": {

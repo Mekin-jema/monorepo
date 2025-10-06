@@ -1,17 +1,17 @@
 // packages/db/src/index.ts
 
 // Export a single Prisma client instance if you have one in lib/prisma
-import { mongoPrisma} from "./client/postDBClient";    
-import { sqlitePrisma } from "./client/sqliteDBClient";
-import { postgresPrisma } from "./client/userDBClient";
+import { productPrisma} from "./client/prodctDBClient";    
+import { orderPrisma } from "./client/orderDBClient";
+import { authPrisma } from "./client/authDBClient";
 
 
 // Export all generated clients explicitly
-export * as PostgresDB from "../generated/postgres";
-export * as MongoDB from "../generated/mongo";
-export * as SQLiteDB from "../generated/sqlite";
+export * as productType from "../generated/product";
+export * as orderType from "../generated/order";
+export * as authType from "../generated/auth";
 
 //  Export the clients for easy access
 
 
-export {mongoPrisma,sqlitePrisma,postgresPrisma }
+export {productPrisma,orderPrisma,authPrisma }

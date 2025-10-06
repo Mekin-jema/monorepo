@@ -20,6 +20,7 @@ app.use(
 app.all("/api/auth", toNodeHandler(auth));
 
 
+
 // Only use express.json() for other routes
 app.use(express.json());
 

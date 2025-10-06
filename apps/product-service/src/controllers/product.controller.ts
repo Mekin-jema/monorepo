@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { prisma, Prisma } from "@repo/product-db";
+import { productPrisma,productType } from "@repo/db";
 import { producer } from "../utils/kafka";
 import { StripeProductType } from "@repo/types";
 
 export const createProduct = async (req: Request, res: Response) => {
-  const data: Prisma.ProductCreateInput = req.body;
+  const data: productType.Prisma.ProductCreateInput = req.body;
 
   const { colors, images } = data;
   if (!colors || !Array.isArray(colors) || colors.length === 0) {
@@ -23,7 +23,7 @@ export const createProduct = async (req: Request, res: Response) => {
       .json({ message: "Missing images for colors!", missingColors });
   }
 
-  const product = await prisma.product.create({ data });
+  const product = await productPrisma.product.create({ data });
 
   const stripeProduct: StripeProductType = {
     id: product.id.toString(),
@@ -37,9 +37,11 @@ export const createProduct = async (req: Request, res: Response) => {
 
 export const updateProduct = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const data: Prisma.ProductUpdateInput = req.body;
-
-  const updatedProduct = await prisma.product.update({
+  const data: productType.Prisma.ProductUpdateInput = req.body;
+  if(!data){
+    return res.status(400).json({ message: "No data provided for update!" });
+  }
+  const updatedProduct = await productPrisma.product.update({
     where: { id: Number(id) },
     data,
   });
@@ -50,7 +52,7 @@ export const updateProduct = async (req: Request, res: Response) => {
 export const deleteProduct = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const deletedProduct = await prisma.product.delete({
+  const deletedProduct = await productPrisma.product.delete({
     where: { id: Number(id) },
   });
 
@@ -65,21 +67,21 @@ export const getProducts = async (req: Request, res: Response) => {
   const orderBy = (() => {
     switch (sort) {
       case "asc":
-        return { price: Prisma.SortOrder.asc };
+        return { price: productType.Prisma.SortOrder.asc };
         break;
       case "desc":
-        return { price: Prisma.SortOrder.desc };
+        return { price: productType.Prisma.SortOrder.desc };
         break;
       case "oldest":
-        return { createdAt: Prisma.SortOrder.asc };
+        return { createdAt: productType.Prisma.SortOrder.asc };
         break;
       default:
-        return { createdAt: Prisma.SortOrder.desc };
+        return { createdAt: productType.Prisma.SortOrder.desc };
         break;
     }
   })();
 
-  const products = await prisma.product.findMany({
+  const products = await productPrisma.product.findMany({
     where: {
       category: {
         slug: category as string,
@@ -99,7 +101,7 @@ export const getProducts = async (req: Request, res: Response) => {
 export const getProduct = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const product = await prisma.product.findUnique({
+  const product = await productPrisma.product.findUnique({
     where: { id: Number(id) },
   });
 
