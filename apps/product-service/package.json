@@ -6,7 +6,7 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "pnpm dlx tsx --watch src/index.ts --port 3002",
+    "dev": "pnpm dlx tsx --watch  src/index.ts --port 3002",
     "check-types": "tsc --noEmit"
   },
   "keywords": [
@@ -20,18 +20,18 @@
   "author": "Mekin Jemal",
   "license": "ISC",
   "dependencies": {
+    "@repo/auth": "workspace:*",
     "@repo/db": "workspace:*",
+    "@repo/kafka": "workspace:*",
     "better-auth": "^1.3.24",
     "cors": "^2.8.5",
-    "express": "^5.0.3",
-    "@repo/kafka": "workspace:*",
-    "@repo/auth": "workspace:*"
-    
+    "express": "^5.0.3"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
     "@repo/types": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.3"
+    "@types/express": "^5.0.3",
+    "dotenv": "^17.2.3"
   }
 }

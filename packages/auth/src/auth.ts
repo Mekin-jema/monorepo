@@ -1,9 +1,9 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 // If your Prisma file is located elsewhere, you can change the path
-import { postgresPrisma } from "@repo/db";
+import { authPrisma } from "@repo/db";
 export const auth = betterAuth({
-    database: prismaAdapter(postgresPrisma, {
+    database: prismaAdapter(authPrisma, {
         provider: "postgresql", // or "mysql", "sqlite", ...etc
     }),
       pages:{

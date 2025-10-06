@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config(); // automatically loads .env in the same folder
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import { toNodeHandler, fromNodeHeaders } from "better-auth/node";

@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { auth } from "@repo/auth"; // your Better Auth setup
-import {postgresPrisma} from "@repo/db"
 import { fromNodeHeaders } from "better-auth/node";
 
 declare global {
