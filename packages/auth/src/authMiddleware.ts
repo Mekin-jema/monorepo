@@ -49,3 +49,4 @@ export const authorize =
 
 // Shortcut middleware for admin-only routes
 export const isAdmin = authorize("admin");
+ 

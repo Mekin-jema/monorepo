@@ -6,6 +6,6 @@
         "outDir": "dist",
         "rootDir": "src",
     },
-    "include": ["src","*.ts"],
+    "include": ["src","*.ts", "../../apps/product-service/src/middleware/authMiddleware.ts"],
     "exclude": ["node_modules","dist","**/*.test.ts"]
 }

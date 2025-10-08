@@ -5,7 +5,7 @@ import {
   getCategories,
   updateCategory,
 } from "../controllers/category.controller";
-import { isAdmin, isAuthenticated } from "../middleware/authMiddleware";
+import { isAdmin, isAuthenticated } from "@repo/auth";
 
 const router: Router = Router();
 
