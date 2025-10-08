@@ -8,7 +8,7 @@ import { authPrisma } from "./client/authDBClient";
 
 // Export all generated clients explicitly
 export * as productType from "../generated/product";
-export * as orderType from "../generated/order";
+export * as OrderType from "../generated/order";
 export * as authType from "../generated/auth";
 
 //  Export the clients for easy access

@@ -21,7 +21,6 @@
   "scripts": {
     "lint": "next lint",
     "check-types": "tsc --noEmit",
-    "postinstall": "pnpm generate",
     
     "generate:auth": "npx prisma generate --schema ./prisma/auth/auth.prisma ",
     "generate:product": "npx prisma generate --schema ./prisma/product/product.prisma",

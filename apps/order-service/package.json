@@ -13,11 +13,14 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@repo/auth": "workspace:*",
+    "@repo/db": "workspace:*",
+    "@repo/types": "workspace:*",
     "@repo/typescript-config": "workspace:*"
   },
   "dependencies": {
-    "fastify": "^5.6.1",
-    "@repo/typescript-config": "workspace:*"
-
+    "@repo/typescript-config": "workspace:*",
+    "date-fns": "^4.1.0",
+    "fastify": "^5.6.1"
   }
 }

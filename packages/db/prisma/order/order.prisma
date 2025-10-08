@@ -1,17 +1,36 @@
-generator Client {
+generator client {
   provider = "prisma-client-js"
   output   = "../../generated/order"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      =  "file:./dev.db"
+  provider = "sqlite" // You can change to "mongodb" if needed
+  url      = "file:./dev.db"
 }
 
-model Cache {
-  id        String   @id @default(cuid()) 
-  key       String   @unique
-  value     String
-  expiresAt DateTime?
-  createdAt DateTime @default(now())
+enum OrderStatus {
+  success
+  failed
+}
+
+model Order {
+  id        String    @id @default(cuid()) @map("_id")
+  userId    String
+  email     String
+  amount    Float
+  status    OrderStatus
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id        String  @id @default(cuid()) @map("_id")
+  name      String
+  quantity  Int
+  price     Float
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id])
+
+  @@index([orderId]) // optional index for faster queries on orderId
 }
