@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 // If your Prisma file is located elsewhere, you can change the path
 import { authPrisma } from "@repo/db";
+import { admin } from "better-auth/plugins/admin";
 export const auth = betterAuth({
     database: prismaAdapter(authPrisma, {
         provider: "postgresql", // or "mysql", "sqlite", ...etc
@@ -31,6 +32,14 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string, 
     }, 
   }, 
+  // your existing config
+  plugins: [
+    admin({
+      // configure admin roles if needed
+      defaultRole: "user",
+      // roles: ["user", "admin"],
+    }),
+  ],
 
 }); 
 
