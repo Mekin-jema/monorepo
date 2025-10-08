@@ -3,13 +3,14 @@ import { auth } from "@repo/auth"; // your Better Auth instance
 import {authPrisma} from "@repo/db"
 import { producer } from "../utils/kafka";
 
-const router = Router();
+
+const router: Router = Router();
 
 // Get list of users (for admin / debug) — note: Better Auth may not expose a public “getAllUsers” API
 router.get("/", async (req, res) => {
   // This assumes you have access to your user store (e.g. via your DB / ORM)
   // Better Auth itself is for auth operations; you still maintain user tables or SDK
-  const users = await /* yourUserModel.findAll() or whatever you use */;
+  const users = await authPrisma.user.findMany({});
   res.status(200).json(users);
 });
 
@@ -44,17 +45,17 @@ router.post("/", async (req, res) => {
       res.setHeader("Set-Cookie", setCookie);
     }
 
-    const respBody = await response.json();
+    // const respBody = await response.json();
 
     // Optionally produce Kafka message
     producer.send("user.created", {
       value: {
-        username: respBody.user?.name,
-        email: respBody.user?.email,
+        username: response.user?.name,
+        email: response.user?.email,
       },
     });
 
-    res.status(response.status).json(respBody);
+    res.status(2000).json(response);
   } catch (err: any) {
     // error handling
     res.status(err.status ?? 500).json({ error: err.message ?? "Error" });
