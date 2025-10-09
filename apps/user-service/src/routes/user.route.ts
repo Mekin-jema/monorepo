@@ -3,6 +3,14 @@ import { auth } from "@repo/auth"; // your Better Auth instance
 import {authPrisma} from "@repo/db"
 import { producer } from "../utils/kafka";
 
+const statusCodeMap: Record<string, number> = {
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  UNPROCESSABLE_ENTITY: 422,
+  INTERNAL_SERVER_ERROR: 500,
+};
 
 const router: Router = Router();
 
@@ -26,16 +34,13 @@ router.get("/:id", async (req, res) => {
 
 // Create a new user (sign up)
 router.post("/", async (req, res) => {
+  console.log(req.body);  
   const { email, password, name } = req.body;
 
   try {
     // Use Better Auth sign-up API
     const { headers, response } = await auth.api.signUpEmail({
-      body: {
-        email,
-        password,
-        name,
-      },
+      body: { email, password, name },
       returnHeaders: true,
     });
 
@@ -45,8 +50,6 @@ router.post("/", async (req, res) => {
       res.setHeader("Set-Cookie", setCookie);
     }
 
-    // const respBody = await response.json();
-
     // Optionally produce Kafka message
     producer.send("user.created", {
       value: {
@@ -55,10 +58,15 @@ router.post("/", async (req, res) => {
       },
     });
 
-    res.status(2000).json(response);
+    res.status(200).json(response);
   } catch (err: any) {
-    // error handling
-    res.status(err.status ?? 500).json({ error: err.message ?? "Error" });
+    // Convert string status to integer
+    const status =
+      typeof err.status === "string"
+        ? statusCodeMap[err.status] ?? 500
+        : err.status ?? 500;
+
+    res.status(status).json({ error: err.message ?? "Error" });
   }
 });
 

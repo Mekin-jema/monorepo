@@ -17,7 +17,7 @@ export async function isAuthenticated(
 
   // Save user info in Hono context
   c.set("userId", session.user.id);
-  c.set("role", session.user.role);
+  // c.set("role", session.user.role);
   c.set("user", session.user);
   c.set("session", session.session);
 

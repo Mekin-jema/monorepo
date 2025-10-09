@@ -1,11 +1,14 @@
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
-import { clerkMiddleware } from "@clerk/express";
-import { shouldBeAdmin } from "./middleware/authMiddleware.js";
 import userRoute from "./routes/user.route.js";
 import { producer } from "./utils/kafka.js";
-
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "@repo/auth";
+// import { isAdmin } from "@repo/auth";
 const app = express();
+
+// app.all("/api/auth/*", toNodeHandler(auth)); // For ExpressJS v4
+app.all("/api/auth/*splat", toNodeHandler(auth)); //For ExpressJS v4
 app.use(
   cors({
     origin: ["http://localhost:3003"],
@@ -13,7 +16,6 @@ app.use(
   })
 );
 app.use(express.json());
-app.use(clerkMiddleware());
 
 app.get("/health", (req: Request, res: Response) => {
   return res.status(200).json({
@@ -23,7 +25,7 @@ app.get("/health", (req: Request, res: Response) => {
   });
 });
 
-app.use("/users", shouldBeAdmin, userRoute);
+app.use("/users",  userRoute);
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.log(err);

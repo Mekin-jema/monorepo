@@ -5,7 +5,7 @@ generator Client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL_POSTGRES")
+  url   = "postgresql://postgres_user:postgres_pass@localhost:5432/authdb?schema=public"
 }
 
 

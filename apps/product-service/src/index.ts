@@ -39,7 +39,7 @@ app.get("/api/me", async (req, res) => {
   const session = await auth.api.getSession({
     headers: fromNodeHeaders(req.headers),
   });
-  return res.json(session);
+  return res.status(200).json(session);
 });
 
 app.use("/products", productRouter);
