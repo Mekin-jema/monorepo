@@ -245,6 +245,9 @@ importers:
       '@repo/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@repo/kafka':
+        specifier: workspace:*
+        version: link:../../packages/kafka
       '@repo/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -362,6 +365,12 @@ importers:
       express:
         specifier: ^5.0.3
         version: 5.1.0
+      fastify:
+        specifier: ^5.6.1
+        version: 5.6.1
+      hono:
+        specifier: ^4.9.9
+        version: 4.9.9
       server-only:
         specifier: ^0.0.1
         version: 0.0.1

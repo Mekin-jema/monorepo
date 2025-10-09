@@ -1,14 +1,11 @@
 import Fastify from "fastify";
-import Clerk from "@clerk/fastify";
-import { shouldBeUser } from "./middleware/authMiddleware.js";
-import { connectOrderDB } from "@repo/order-db";
 import { orderRoute } from "./routes/order.js";
 import { consumer, producer } from "./utils/kafka.js";
 import { runKafkaSubscriptions } from "./utils/subscriptions.js";
+import { isAuthenticated } from "@repo/auth";
 
 const fastify = Fastify();
 
-fastify.register(Clerk.clerkPlugin);
 
 fastify.get("/health", (request, reply) => {
   return reply.status(200).send({
@@ -18,7 +15,7 @@ fastify.get("/health", (request, reply) => {
   });
 });
 
-fastify.get("/test", { preHandler: shouldBeUser }, (request, reply) => {
+fastify.get("/test", { preHandler: isAuthenticated }, (request, reply) => {
   return reply.send({
     message: "Order service is authenticated!",
     userId: request.userId,

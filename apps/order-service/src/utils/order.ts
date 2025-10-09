@@ -16,7 +16,7 @@ export const createOrder = async (order: OrderType.Prisma.OrderCreateInput) => {
         amount: order.amount,
         status: order.status,
         products: {
-          create: order.products.map((p) => ({
+          create: order.products.map((p: OrderType.Product) => ({
             name: p.name,
             quantity: p.quantity,
             price: p.price,

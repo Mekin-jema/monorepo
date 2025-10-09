@@ -16,7 +16,8 @@
     "@repo/auth": "workspace:*",
     "@repo/db": "workspace:*",
     "@repo/types": "workspace:*",
-    "@repo/typescript-config": "workspace:*"
+    "@repo/typescript-config": "workspace:*",
+    "@repo/kafka": "workspace:*"
   },
   "dependencies": {
     "@repo/typescript-config": "workspace:*",

@@ -6,7 +6,7 @@ export const runKafkaSubscriptions = async () => {
   consumer.subscribe([
     {
       topicName: "payment.successful",
-      topicHandler: async (message) => {
+      topicHandler: async (message: { value: any; }) => {
         const order = message.value;
         await createOrder(order);
       },
