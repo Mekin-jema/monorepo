@@ -2,7 +2,8 @@ import Fastify from "fastify";
 import { orderRoute } from "./routes/order.js";
 import { consumer, producer } from "./utils/kafka.js";
 import { runKafkaSubscriptions } from "./utils/subscriptions.js";
-import { isAuthenticated } from "@repo/auth";
+import {  isAuthenticatedFastify } from "@repo/auth";
+import { connectOrderDB } from "./utils/connectDb.js";
 
 const fastify = Fastify();
 
@@ -15,7 +16,7 @@ fastify.get("/health", (request, reply) => {
   });
 });
 
-fastify.get("/test", { preHandler: isAuthenticated }, (request, reply) => {
+fastify.get("/test", { preHandler: isAuthenticatedFastify }, (request, reply) => {
   return reply.send({
     message: "Order service is authenticated!",
     userId: request.userId,
