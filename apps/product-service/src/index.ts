@@ -9,6 +9,9 @@ import { consumer, producer } from "./utils/kafka.js";
 import { auth } from "./utils/auth";
 
 const app = express();
+// Mount Better Auth handler before express.json()
+app.all("/api/auth/*splat", toNodeHandler(auth)); //For ExpressJS v4
+
 
 // CORS middleware
 app.use(
@@ -18,8 +21,7 @@ app.use(
   })
 );
 
-// Mount Better Auth handler before express.json()
-app.all("/api/auth", toNodeHandler(auth));
+
 
 
 

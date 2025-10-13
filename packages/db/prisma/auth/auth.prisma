@@ -18,6 +18,7 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @default(now()) @updatedAt
   role            String   @default("user")
+  banned         Boolean   @default(false)
 
   sessions      Session[]
   accounts      Account[]

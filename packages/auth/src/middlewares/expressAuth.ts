@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { getUserFromHeaders } from "../getUser";
+import { auth } from "../auth";
+import { fromNodeHeaders } from "better-auth/node";
 
 // Extend Express request type safely
 declare global {
@@ -11,14 +13,30 @@ declare global {
   }
 }
 
+
+
 export const isAuthenticated = async (req: Request, res: Response, next: NextFunction) => {
-  const user = await getUserFromHeaders(req.headers);
-  if (!user) {
-    return res.status(401).json({ message: "You are not logged in!" });
+  try {
+    console.log("Checking authentication...", req.headers);
+
+    const session = await auth.api.getSession({
+      headers: fromNodeHeaders(req.headers),
+    });
+
+    if (!session) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    // Attach user info to request object
+    req.userId = session.user.id;
+    req.role = session.user.role ?? undefined;
+
+    // Call next middleware
+    next();
+  } catch (err) {
+    console.error("Authentication check failed:", err);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
-  req.userId = user.userId;
-  req.role = user.role;
-  next();
 };
 
 export const authorize =

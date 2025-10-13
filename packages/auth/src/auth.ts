@@ -31,11 +31,11 @@ export const auth = betterAuth({
       clientSecret: GITHUB_CLIENT_SECRET,
     },
   },
-  // plugins: [
-  //   admin({
-  //     defaultRole: "user",
-  //   }),
-  // ],
+  plugins: [
+    admin({
+      defaultRole: "user",
+    }),
+  ],
 });
 
 console.log("Better Auth initialized manually:");
