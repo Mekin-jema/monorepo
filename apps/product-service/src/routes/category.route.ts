@@ -9,7 +9,9 @@ import { isAdmin, isAuthenticated } from "@repo/auth";
 
 const router: Router = Router();
 
-router.post("/", isAuthenticated,  createCategory);
+router.post("/", 
+  // isAuthenticated, 
+   createCategory);
 router.put("/:id", isAuthenticated, isAdmin, updateCategory);
 router.delete("/:id", isAuthenticated, isAdmin, deleteCategory);
 router.get("/", isAuthenticated, getCategories);

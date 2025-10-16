@@ -16,16 +16,18 @@ services:
     networks:
       - backend-network
   mongodb:
-    image: mongo:7
-    container_name: mongo_db
+    build: ./mongodb_rs
     restart: always
-    command: ["--replSet", "rs0", "--bind_ip_all"]
-    ports:
-      - "27018:27017"
+    container_name: mongo_db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: "mongo_user"
-      MONGO_INITDB_ROOT_PASSWORD: "mongo_pass"
-      MONGO_INITDB_DATABASE: "mongotest"
+      MONGO_INITDB_ROOT_USERNAME: "admin"
+      MONGO_INITDB_ROOT_PASSWORD: "password"
+      MONGO_INITDB_DATABASE: "db"
+      MONGO_COMMAND: mongosh
+      MONGO_REPLICA_HOST: mongo_db
+      MONGO_REPLICA_PORT: "27018"
+    ports:
+      - "27017:27017"
     volumes:
       - mongo_data:/data/db
     networks:
