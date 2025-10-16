@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+
+  "//": "This package manages multiple Prisma schemas for different services (auth, product, order).",
+  
   "exports": {
     ".": "./src/index.ts",
     "./product": {
@@ -18,38 +21,54 @@
       "default": "./dist/order-db.js"
     }
   },
+
   "scripts": {
     "lint": "next lint",
     "check-types": "tsc --noEmit",
-    
-    "generate:auth": "npx prisma generate --schema ./prisma/auth/auth.prisma ",
-    "generate:product": "npx prisma generate --schema ./prisma/product/product.prisma",
-    "generate:order": "npx prisma generate --schema ./prisma/order/order.prisma ",
-    "generate": "pnpm generate:auth && pnpm generate:product && pnpm generate:order",
-    "migrate:auth": "npx prisma migrate dev --force --schema ./prisma/auth/auth.prisma  ",
-    "migrate:order": "npx prisma migrate dev --schema ./prisma/order/order.prisma",
-    "migrate": "pnpm migrate:auth  && pnpm migrate:order",
-   
-    "deploy:auth": "npx prisma migrate deploy --schema ./prisma/auth/auth.prisma",
-    "deploy:product": "npx prisma migrate deploy --schema ./prisma/product/product.prisma",
-    "deploy:order": "npx prisma migrate deploy --schema ./prisma/order/order.prisma",
-    "deploy": "pnpm deploy:auth && pnpm deploy:product && pnpm deploy:order",
-    
-    "studio:auth": "npx prisma studio --schema ./prisma/auth/auth.prisma --port 5554 &",
-  "studio:product": "npx prisma studio --schema ./prisma/product/product.prisma --port 5556 &",
-  "studio:order": "npx prisma studio --schema ./prisma/order/order.prisma --port 5557 &",
-  "studio": "pnpm run studio:auth && pnpm run studio:product && pnpm run studio:order"
-,
-    "seeds:order": "pnpm dlx tsx  ./prisma/seeds/orderSeed.ts",
-    "seeds:product": "pnpm dlx tsx  ./prisma/seeds/productSeed.ts",
-    "seeds:auth": "pnpm dlx tsx  ./prisma/seeds/authSeed.ts",
-    "seedsall": "node  prisma/seeds/runAllSeeds.mjs"
+
+    "//": "PRISMA GENERATE — generates Prisma clients for each schema",
+    "generate:auth": "pnpm dlx prisma generate --schema ./prisma/auth/auth.prisma",
+    "generate:product": "pnpm dlx prisma generate --schema ./prisma/product/product.prisma",
+    "generate:order": "pnpm dlx prisma generate --schema ./prisma/order/order.prisma",
+    "generate": "pnpm run generate:auth && pnpm run generate:product && pnpm run generate:order",
+
+    "//": "PRISMA MIGRATE — applies migration changes for each schema",
+    "migrate:auth": "pnpm dlx prisma migrate dev --force --schema ./prisma/auth/auth.prisma",
+    "migrate:product": "pnpm dlx prisma migrate dev --schema ./prisma/product/product.prisma",
+    "migrate:order": "pnpm dlx prisma migrate dev --schema ./prisma/order/order.prisma",
+    "migrate": "pnpm run migrate:auth && pnpm run migrate:product && pnpm run migrate:order",
+
+    "//": "PRISMA DEPLOY — deploys migration changes in production",
+    "deploy:auth": "pnpm dlx prisma migrate deploy --schema ./prisma/auth/auth.prisma",
+    "deploy:product": "pnpm dlx prisma migrate deploy --schema ./prisma/product/product.prisma",
+    "deploy:order": "pnpm dlx prisma migrate deploy --schema ./prisma/order/order.prisma",
+    "deploy": "pnpm run deploy:auth && pnpm run deploy:product && pnpm run deploy:order",
+
+    "//": "PRISMA DB PUSH — syncs schema to DB without migrations",
+    "push:auth": "pnpm dlx prisma db push --schema ./prisma/auth/auth.prisma",
+    "push:product": "pnpm dlx prisma db push --schema ./prisma/product/product.prisma",
+    "push:order": "pnpm dlx prisma db push --schema ./prisma/order/order.prisma",
+    "push": "pnpm run push:auth && pnpm run push:product && pnpm run push:order",
+
+    "//": "PRISMA STUDIO — launches a GUI for each schema",
+    "studio:auth": "pnpm dlx prisma studio --schema ./prisma/auth/auth.prisma --port 5554 &",
+    "studio:product": "pnpm dlx prisma studio --schema ./prisma/product/product.prisma --port 5556 &",
+    "studio:order": "pnpm dlx prisma studio --schema ./prisma/order/order.prisma --port 5557 &",
+    "studio": "pnpm run studio:auth && pnpm run studio:product && pnpm run studio:order",
+
+    "//": "DATABASE SEEDS — populate sample data into databases",
+    "seeds:auth": "pnpm dlx tsx ./prisma/seeds/authSeed.ts",
+    "seeds:product": "pnpm dlx tsx ./prisma/seeds/productSeed.ts",
+    "seeds:order": "pnpm dlx tsx ./prisma/seeds/orderSeed.ts",
+    "seedsall": "pnpm dlx tsx ./prisma/seeds/runAllSeeds.mjs"
   },
+
   "dependencies": {
     "@prisma/client": "latest",
     "@repo/typescript-config": "workspace:*",
     "dotenv": "^17.2.3"
   },
+
   "devDependencies": {
     "@types/node": "^24.6.2",
     "prisma": "latest",

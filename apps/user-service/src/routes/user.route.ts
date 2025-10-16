@@ -14,7 +14,6 @@ const statusCodeMap: Record<string, number> = {
 };
 
 const router: Router = Router();
-
 // Get list of users (for admin / debug) — note: Better Auth may not expose a public “getAllUsers” API
 router.get("/", async (req, res) => {
   // This assumes you have access to your user store (e.g. via your DB / ORM)
