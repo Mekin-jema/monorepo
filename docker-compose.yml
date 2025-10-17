@@ -15,23 +15,23 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - backend-network
-  mongodb:
-    build: ./mongodb_rs
-    restart: always
-    container_name: mongo_db
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: "admin"
-      MONGO_INITDB_ROOT_PASSWORD: "password"
-      MONGO_INITDB_DATABASE: "db"
-      MONGO_COMMAND: mongosh
-      MONGO_REPLICA_HOST: mongo_db
-      MONGO_REPLICA_PORT: "27018"
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-    networks:
-      - backend-network
+  # mongodb:
+  #   build: ./mongodb_rs
+  #   restart: always
+  #   container_name: mongo_db
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: "admin"
+  #     MONGO_INITDB_ROOT_PASSWORD: "password"
+  #     MONGO_INITDB_DATABASE: "db"
+  #     MONGO_COMMAND: mongosh
+  #     MONGO_REPLICA_HOST: mongo_db
+  #     MONGO_REPLICA_PORT: "27018"
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - mongo_data:/data/db
+  #   networks:
+  #     - backend-network
 
  
   portainer:

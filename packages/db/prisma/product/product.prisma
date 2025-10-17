@@ -4,14 +4,15 @@ generator Client {
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = "mongodb://admin:password@localhost:27017/db?authSource=admin"
+  provider = "sqlite"
+  // url      = "mongodb://admin:password@localhost:27017/db?authSource=admin"
+  url = "file:./dev.db"
 
 }
 
 
 model Product {
-  id              String   @id @map("_id") @default(cuid())
+  id              String   @id@default(cuid())
   name             String
   shortDescription String
   description      String
@@ -26,7 +27,7 @@ model Product {
 }
 
 model Category {
-  id       String   @id @map("_id") @default(cuid() )
+  id       String   @id @default(cuid() )
   name     String
   slug     String    @unique
   products Product[]
