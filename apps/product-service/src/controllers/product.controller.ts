@@ -42,7 +42,7 @@ export const updateProduct = async (req: Request, res: Response) => {
     return res.status(400).json({ message: "No data provided for update!" });
   }
   const updatedProduct = await productPrisma.product.update({
-    where: { id: Number(id) },
+    where: { id },
     data,
   });
 
@@ -53,10 +53,10 @@ export const deleteProduct = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   const deletedProduct = await productPrisma.product.delete({
-    where: { id: Number(id) },
+    where: { id },
   });
 
-  producer.send("product.deleted", { value: Number(id) });
+  producer.send("product.deleted", { value: id });
 
   return res.status(200).json(deletedProduct);
 };
@@ -90,6 +90,10 @@ export const getProducts = async (req: Request, res: Response) => {
         contains: search as string,
         // mode: "insensitive",
       },
+      description:{
+        contains: search as string,
+        // mode:"insensitive",
+      }
     },
     orderBy,
     take: limit ? Number(limit) : undefined,
@@ -102,7 +106,7 @@ export const getProduct = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   const product = await productPrisma.product.findUnique({
-    where: { id: Number(id) },
+    where: { id },
   });
 
   return res.status(200).json(product);

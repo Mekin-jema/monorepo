@@ -17,7 +17,7 @@ model Product {
   shortDescription String
   description      String
   price            Int
-  sizes            String
+  sizes            Json
   colors           Json
   images           Json
   createdAt        DateTime @default(now()) 

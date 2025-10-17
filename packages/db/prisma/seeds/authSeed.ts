@@ -1,16 +1,15 @@
-import { PrismaClient } from '../../generated/postgres';
-const prisma = new PrismaClient();
+import { authPrisma } from '../../src/index';
 
 async function main() {
-  // Optional: clear existing data (careful in production)
-  await prisma.verification.deleteMany({});
-  await prisma.account.deleteMany({});
-  await prisma.session.deleteMany({});
-  await prisma.user.deleteMany({});
+  // Optional: clear existing data
+  await authPrisma.verification.deleteMany({});
+  await authPrisma.account.deleteMany({});
+  await authPrisma.session.deleteMany({});
+  await authPrisma.user.deleteMany({});
 
   const now = new Date();
 
-  // Seed users
+  // 1️⃣ Seed users
   const users = [
     {
       id: "user1",
@@ -31,7 +30,7 @@ async function main() {
   ];
 
   for (const u of users) {
-    await prisma.user.create({
+    await authPrisma.user.create({
       data: {
         ...u,
         createdAt: now,
@@ -40,7 +39,7 @@ async function main() {
     });
   }
 
-  // Seed sessions (for users)
+  // 2️⃣ Seed sessions
   const sessions = [
     {
       id: "sess1",
@@ -61,7 +60,7 @@ async function main() {
   ];
 
   for (const s of sessions) {
-    await prisma.session.create({
+    await authPrisma.session.create({
       data: {
         ...s,
         createdAt: now,
@@ -70,7 +69,7 @@ async function main() {
     });
   }
 
-  // Seed accounts (credential / OAuth / password accounts)
+  // 3️⃣ Seed accounts
   const accounts = [
     {
       id: "acct1",
@@ -83,7 +82,7 @@ async function main() {
       accessTokenExpiresAt: null,
       refreshTokenExpiresAt: null,
       scope: null,
-      password: "password123",  // if you're handling plain passwords for seed (for dev only)
+      password: "password123", // for dev only
     },
     {
       id: "acct2",
@@ -95,7 +94,7 @@ async function main() {
   ];
 
   for (const a of accounts) {
-    await prisma.account.create({
+    await authPrisma.account.create({
       data: {
         ...a,
         createdAt: now,
@@ -104,18 +103,18 @@ async function main() {
     });
   }
 
-  // Seed verification entries (if you use them)
+  // 4️⃣ Seed verification entries
   const verifications = [
     {
       id: "ver1",
       identifier: "bob@example.com",
       value: "verif-token-bob",
-      expiresAt: new Date(now.getTime() + 1000 * 60 * 15), // +15m
+      expiresAt: new Date(now.getTime() + 1000 * 60 * 15), // +15 mins
     },
   ];
 
   for (const v of verifications) {
-    await prisma.verification.create({
+    await authPrisma.verification.create({
       data: {
         ...v,
         createdAt: now,
@@ -124,14 +123,13 @@ async function main() {
     });
   }
 
-  console.log("Postgres seeding complete.");
+  console.log("Auth module seeding complete.");
 }
 
 main()
   .catch((e) => {
     console.error("Seed error:", e);
-    // process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect();
+    await authPrisma.$disconnect();
   });

@@ -56,7 +56,7 @@
     "seeds:auth": "pnpm dlx tsx ./prisma/seeds/authSeed.ts",
     "seeds:product": "pnpm dlx tsx ./prisma/seeds/productSeed.ts",
     "seeds:order": "pnpm dlx tsx ./prisma/seeds/orderSeed.ts",
-    "seedsall": "pnpm dlx tsx ./prisma/seeds/runAllSeeds.mjs"
+    "seeds": "pnpm dlx tsx ./prisma/seeds/runAllSeeds.mjs"
   },
   "dependencies": {
     "@prisma/client": "latest",
